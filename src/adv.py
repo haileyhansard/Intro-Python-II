@@ -40,8 +40,8 @@ room['treasure'].s_to = room['narrow']
 #
 
 ### Notes about my code to make the game run ###
-# My game starts with a welcome message, and explanation of the scenario, and asks the user if they would like to play. 
-# If yes, It will run the functions I've written. 
+# My game starts with a welcome message, and explanation of the scenario, and asks what their player name is. 
+# Then, It will run the functions I've written. 
 # After the game, it will ask if you want to play again. If yes, run the functions again. If no, it will exit the game.
 
 ### Defining my functions ###
@@ -51,17 +51,23 @@ def display_intro():
     print("Princess Rosania needs your help. The evil usurper of her family's crown, Wart Drogo, has stolen mounds of gold and rubies from her family and hidden it away. If you help her find the treasure, you will be handsomely rewarded with a mound of gold of your own!")
     print()
 
-def participate():
-    answer = ""
-    while answer.lower().strip() != "yes" and answer.lower().strip() != "no": #input validation
-        answer = input("Would you like to help the princess find the treasure? (yes/no)")
-    return answer
-    if answer.lower().strip() == "yes":
-        answer = input("Great! Let's get started. You are at a crossroads. Would you like to go north, south, east, or west?").lower().strip()
-        if answer == "north":
-            answer == input("You are now in the foyer. Would you like to go north, south, or east?").lower().strip()
-    else:
-        print("That's too bad!")
+# def participate():
+#     answer = ""
+#     while answer.lower().strip() != "yes" and answer.lower().strip() != "no": #input validation
+#         answer = input("Would you like to help the princess find the treasure? (yes/no)")
+#     return answer
+#     if answer.lower().strip() == "yes":
+#         answer = input("Great! Let's get started. You are at a crossroads. Would you like to go north, south, east, or west?").lower().strip()
+#         if answer == "north":
+#             answer == input("You are now in the foyer. Would you like to go north, south, or east?").lower().strip()
+#     else:
+#         print("That's too bad!")
+
+# Make a new player object that is currently in the 'outside' room.
+# def start_game():
+#     player_name = input("Choose your player name: \n")
+#     greet_user(player_name)
+#     player = Player(player_name, room["outside"])
 
 def greet_user(name):
     while True:
@@ -71,43 +77,65 @@ def greet_user(name):
             break
         else:
             print("Please provide an adventurer name")
-            name = input("Type your name: \n>>  ")
+            name = input("Type your name: \n  ")
 
-# Make a new player object that is currently in the 'outside' room.
-def start_game():
-    player_name = input("Choose your player name: \n")
-    greet_user(player_name)
-    player = Player(player_name, room["outside"])
+def move():
+    while True:
+        print(f'You are currently in "{player.current_room.name}".')
+        print(textwrap.dedent(player.current_room.description), '\n')
+        playAgain = input("Do you want to play again? (yes or y to continue playing): ")
 
 
-playAgain = "yes" 
-while playAgain == "yes" or playAgain == "y":   
+# playAgain = "yes" 
+# while playAgain == "yes" or playAgain == "y":   
+#     display_intro()
+#     #participate()
+#     start_game()
+#     greet_user(name)
+#     move()
+
+
+def adventure_game():
     display_intro()
-    participate()
-    start_game()
-    #greet_user(player_name)
+    player_name = input("Choose your adventurer name: \n")
+    greet_user(player_name)
+    player = Player(player_name, room['outside'])
+
 
 # Write a loop that:
+    while True:
 #
 # * Prints the current room name
+        print(f'\nYou are currently at "{player.current_room.name}".')
 # * Prints the current description (the textwrap module might be useful here).
-while True:
-    print(f'You are currently in "{player.current_room.name}".')
-    print(textwrap.dedent(player.current_room.description), '\n')
-    playAgain = input("Do you want to play again? (yes or y to continue playing): ")
-
-
-
-
-
+        print(textwrap.dedent(player.current_room.description), '\n')
+    
 # * Waits for user input and decides what to do.
 #
 # If the user enters a cardinal direction, attempt to move to the room there.
 # Print an error message if the movement isn't allowed.
 #
 # If the user enters "q", quit the game.
+        print("Where do you want to go next?")
+        move = input("[n] north     [s] south   [e] east    [w] west    [q] quit game")
+        if move == 'q':
+            break
+        elif move[0] == 'n':
+            if player.current_room.n_to:
+                player.current_room = player.current_room.n_to
+            else:
+                print(f'\n There are no rooms to the north of "{player.current_room.name}". Try a different path. ')
+                continue
+        else:
+            pass
+
+
+
 
 ##TO DO:
-# game is stuck in a loop. need to fix the loop first
-# need to need to add the location identifier of which room they are in
-# need to add ability to move into a different room
+#done # game is stuck in a loop. need to fix the loop first
+#done #need to need to add the location identifier of which room they are in
+# need to add ability to move into a different room.
+
+if __name__ == '__main__':
+    adventure_game()
